@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import Recipe from "./Recipe";
-import IngredientsList from "./ingredientsList";
+import IngredientsList from "./IngredientsList";
 import { getRecipeFromChefClaude } from "../AI.JS";
 
 export default function Main() {
