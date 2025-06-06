@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Recipe from "./Recipe";
 import IngredientsList from "./IngredientsList";
 import { getRecipeFromChefClaude } from "../AI.JS";
@@ -7,6 +6,13 @@ import { getRecipeFromChefClaude } from "../AI.JS";
 export default function Main() {
   const [ingredients, setIngredients] = useState([]);
   const [recipe, setRecipe] = useState("");
+  const recipeSection = useRef(null)
+
+  useEffect(()=>{
+    if(recipe !== "" && recipeSection.current !== null){
+      recipeSection.current.scrollIntoView({behavior: "smooth"})
+    } 
+  }, [recipe])
 
   
   function addIngredient(formData) {
@@ -32,6 +38,7 @@ export default function Main() {
       </form>
       {ingredients.length > 0 && (
         <IngredientsList
+          ref={recipeSection}
           ingredients={ingredients}
           getRecipe={getRecipe}
         />
