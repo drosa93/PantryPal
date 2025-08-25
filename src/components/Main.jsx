@@ -2,28 +2,36 @@ import React, { useEffect, useRef, useState } from "react";
 import Recipe from "./Recipe";
 import IngredientsList from "./IngredientsList";
 import { getRecipeFromChefClaude } from "../AI.JS";
+import RecipesList from "./RecipesList";
 
 export default function Main() {
   const [ingredients, setIngredients] = useState([]);
   const [recipe, setRecipe] = useState("");
-  const recipeSection = useRef(null)
+  const [loading, setLoading] = useState(false);
+  const recipeSection = useRef(null);
 
-  useEffect(()=>{
-    if(recipe !== "" && recipeSection.current !== null){
-      recipeSection.current.scrollIntoView({behavior: "smooth"})
-    } 
-  }, [recipe])
+  useEffect(() => {
+    if (recipe !== "" && recipeSection.current !== null) {
+      recipeSection.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [recipe]);
 
-  
   function addIngredient(formData) {
     const newIngredient = formData.get("ingredient");
     setIngredients((prevIngredients) => [...prevIngredients, newIngredient]);
   }
 
   async function getRecipe() {
-     const recipeMarkdown = await getRecipeFromChefClaude(ingredients)
-        setRecipe(recipeMarkdown)
+    setLoading(true); // start loading
+    try {
+      const recipeMarkdown = await getRecipeFromChefClaude(ingredients);
+      setRecipe(recipeMarkdown);
+      localStorage.setItem('recipe', JSON.stringify(recipeMarkdown))
+    } finally {
+      setLoading(false); // stop loading (even if error happens)
+    }
   }
+
 
   return (
     <main>
@@ -34,8 +42,30 @@ export default function Main() {
           aria-label="Add ingredient"
           name="ingredient"
         />
-        <button>Add ingredient</button>
+        <button> + Add ingredient</button>
+        <button
+          type="button"
+          onClick={() => {
+            setIngredients([]);
+            setRecipe("");
+          }}
+        >
+          Clear
+        </button>
       </form>
+      {ingredients.length === 0 ? (
+        <h2>
+          To get started please add "all the major spices" as one of your
+          ingredients.
+        </h2>
+      ) : (
+        <h2>
+          {ingredients.length <= 3 &&
+            `Add at least ${4 - ingredients.length} more ${
+              ingredients.length >= 3 ? "ingredient" : "ingredients"
+            }`}
+        </h2>
+      )}
       {ingredients.length > 0 && (
         <IngredientsList
           ref={recipeSection}
@@ -43,7 +73,8 @@ export default function Main() {
           getRecipe={getRecipe}
         />
       )}
-      {recipe && <Recipe recipe={recipe}/>}
+      {loading && <p className="loading">Loading recipe... 🍳</p>}
+      {recipe && <Recipe recipe={recipe} />}
     </main>
   );
 }

@@ -1,14 +1,14 @@
 import React from "react";
 
 export default function IngredientsList(props) {
-  const ingredientsListItems = props.ingredients.map((ingredient) => (
-    <li key={ingredient}>{ingredient}</li>
+  const ingredientsListItems = props.ingredients.length > 0 && props.ingredients.map((ingredient, idx) => (
+    <li key={idx}>{ingredient}</li>
   ));
 
   return (
     <section>
       <h2>Ingredients on hand:</h2>
-      <ul className="ingredients-list" aria-live="polite">
+       <ul className="ingredients-list" aria-live="polite">
         {ingredientsListItems}
       </ul>
       {props.ingredients.length > 3 && (
