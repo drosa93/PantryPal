@@ -71,6 +71,7 @@ export default function Main() {
           ref={recipeSection}
           ingredients={ingredients}
           getRecipe={getRecipe}
+          recipe={recipe}
         />
       )}
       {loading && <p className="loading">Loading recipe... 🍳</p>}

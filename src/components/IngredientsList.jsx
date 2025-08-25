@@ -5,6 +5,8 @@ export default function IngredientsList(props) {
     <li key={idx}>{ingredient}</li>
   ));
 
+  console.log(props.recipe)
+
   return (
     <section>
       <h2>Ingredients on hand:</h2>
@@ -13,13 +15,13 @@ export default function IngredientsList(props) {
       </ul>
       {props.ingredients.length > 3 && (
         <div>
-          <div className="get-recipe-container">
+         {props.recipe === ("") && <div className="get-recipe-container">
             <div ref={props.ref}>
               <h3>Ready for a recipe?</h3>
               <p>Generate a recipe from your list of ingredients.</p>
             </div>
           <button onClick={props.getRecipe}>Get a recipe</button>
-          </div>
+          </div>}
         </div>
       )}
     </section>
